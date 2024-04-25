@@ -1,7 +1,14 @@
-﻿# Argocd Installation and Setup
-- create seprate github repositry
-- Put your kubenetes file into git repositry
-- Create deploy.yml file
+﻿# ArgoCD Installation and Setup
+
+This guide walks you through setting up ArgoCD and deploying applications using it.
+
+## Pre-requisites
+- Have access to a Kubernetes cluster (Minikube, EKS, or Kubeadm)
+- GitHub account to store Kubernetes configuration files
+
+- Create separate GitHub repository
+- Put your Kubernetes file into GitHub repository
+- Create deploy.yml file or put Kubernetes file
 
 ```
 apiVersion: apps/v1
@@ -34,7 +41,7 @@ spec:
 
 ```
 
-- Deploy you file in cluster minikube or EKS or kubeadm
+- Deploy your deploy.yml file in cluster minikube or EKS or kubeadm
 
 ```
 kubectl apply -f deploy.yml
@@ -42,7 +49,7 @@ kubectl get deployment
 kubectl get pod 
 ```
 
-- Push your deploy.yml file into gitgub repositry
+- Push your deploy.yml file into the GitHub repository
 
 ```
 git add .\deploy.yml
@@ -50,14 +57,14 @@ git commit -m "WIP: adding the deployement hello k8s"
 git push 
 ```
 
-- Install ArgoCd
+- Install ArgoCD
 
 ```
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 
-- See what are argocd created inside my cluster
+- See what is argocd created inside my cluster
 
 ```
 kubectl get pod -n argocd
@@ -76,7 +83,7 @@ kubectl port-forward -n argocd  svc/argocd-server 5000:443
 
 ![alt text](./screenshots/image-1.png)
 
-- If argocd is run as a Service then you can find your password below command:
+- If argocd is run as a Service then you can find your password below the command:
 
 ```
 argocd admin initial-password -n argocd
@@ -85,7 +92,7 @@ argocd admin initial-password -n argocd
 
 ![alt text](./screenshots/image-3.png)
 
-- Otherwise you can use below command:
+- Otherwise, you can use the below command:
 
 ```
 kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
@@ -100,7 +107,7 @@ kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
 
 ![alt text](./screenshots/image-6.png)
 
-- Create Application.yml file you can also use to create git connect from argocd Dashboard (+ NEW APP) Button
+- Create application.yml file you can also use to create git connect from argocd Dashboard (+ NEW APP) Button
 
 ```
 apiVersion: argoproj.io/v1alpha1
@@ -133,6 +140,6 @@ kubectl apply -f .\application.yml
 
 ![alt text](./screenshots/image-7.png)
 
-- Till now it not fullyconfigured it will take time
+- Till now it is not fully configured it will take time
 
 ![alt text](./screenshots/image-8.png)
