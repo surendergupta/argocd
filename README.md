@@ -6,8 +6,9 @@ This guide walks you through setting up ArgoCD and deploying applications using 
 - Have access to a Kubernetes cluster (Minikube, EKS, or Kubeadm)
 - GitHub account to store Kubernetes configuration files
 
-- Create separate GitHub repository
-- Put your Kubernetes file into GitHub repository
+## Setup GitHub Repository
+- Create a new GitHub repository to store your Kubernetes configuration files.
+- Push your Kubernetes deployment file (deploy.yml) to this repository.
 - Create deploy.yml file or put Kubernetes file
 
 ```
@@ -41,9 +42,11 @@ spec:
 
 ```
 
-- Deploy your deploy.yml file in cluster minikube or EKS or kubeadm
+## Deploy Application
 
-```
+- Apply the deployment file to your Kubernetes cluster:
+
+```bash
 kubectl apply -f deploy.yml
 kubectl get deployment
 kubectl get pod 
@@ -51,50 +54,66 @@ kubectl get pod
 
 - Push your deploy.yml file into the GitHub repository
 
-```
+```bash
 git add .\deploy.yml
 git commit -m "WIP: adding the deployement hello k8s"
 git push 
 ```
 
-- Install ArgoCD
+## Install ArgoCD
 
-```
+- Create a namespace for ArgoCD:
+
+```bash
 kubectl create namespace argocd
+```
+
+- Install ArgoCD using the provided manifest:
+
+```bash
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 
+## Access ArgoCD Dashboard
+
+- Check the deployment status of ArgoCD components:
 - See what is argocd created inside my cluster
 
-```
+```bash
 kubectl get pod -n argocd
 kubectl get svc -n argocd
 
 ```
 
+## Access ArgoCD Dashboard
+
+- Forward the ArgoCD server port to localhost:
 - To see argocd dashboard
 
-```
+```bash
 kubectl port-forward -n argocd  svc/argocd-server 5000:443
 
 ```
-
+- Access the ArgoCD dashboard at https://localhost:5000.
+  
 ![alt text](./screenshots/image.png)
 
 ![alt text](./screenshots/image-1.png)
 
-- If argocd is run as a Service then you can find your password below the command:
+## Retrieve ArgoCD Admin Password
 
-```
+- If ArgoCD is running as a Service, use the following command to retrieve the admin password:
+
+```bash
 argocd admin initial-password -n argocd
 
 ```
 
 ![alt text](./screenshots/image-3.png)
 
-- Otherwise, you can use the below command:
+- If ArgoCD is not running as a Service, use:
 
-```
+```bash
 kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
 
 ```
@@ -103,10 +122,18 @@ kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
 
 ![alt text](./screenshots/image-4.png)
 
+- This is used get password directly:
+  
+```bash
+kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d
+```
+
 ![alt text](./screenshots/image-5.png)
 
 ![alt text](./screenshots/image-6.png)
 
+## Deploy Application with ArgoCD
+- Create an application manifest (application.yml) to deploy your application using ArgoCD.
 - Create application.yml file you can also use to create git connect from argocd Dashboard (+ NEW APP) Button
 
 ```
@@ -129,14 +156,13 @@ spec:
       prune: true
       selfHeal: true
 ```
+- Apply the application manifest to your Kubernetes cluster:
 
-- Deploy your application.yml file in cluster minikube or EKS or kubeadm
-
-```
+```bash
 kubectl apply -f .\application.yml
 ```
 
-- See your argocd Dashboard
+## Access ArgoCD Dashboard
 
 ![alt text](./screenshots/image-7.png)
 
