@@ -1,5 +1,6 @@
 ﻿# Argocd Installation and Setup
-
+- create seprate github repositry
+- Put your kubenetes file into git repositry
 - Create deploy.yml file
 
 ```
